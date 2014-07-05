@@ -10,6 +10,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
 
 namespace RestSharp.Portable
 {
@@ -285,7 +286,8 @@ namespace RestSharp.Portable
         /// <returns>The client itself, to allow call chains</returns>
         public IRestClient ReplaceHandler(Type oldType, IDeserializer deserializer)
         {
-            var contentHandlersToReplace = _contentHandlers.Where(x => oldType.IsAssignableFrom(x.Value.GetType())).ToList();
+            // FIXME changed from isAssignableFrom since not available
+            var contentHandlersToReplace = _contentHandlers.Where(x => x.Value.GetType().Equals(oldType)).ToList();
             foreach (var contentHandlerToReplace in contentHandlersToReplace)
             {
                 _contentHandlers.Remove(contentHandlerToReplace.Key);
